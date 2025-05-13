@@ -4,7 +4,7 @@
 <h1 align="center">GeoIP API</h1>
 <div align='center'>
 
-[![PyPI Package](https://img.shields.io/badge/PyPI-geoip--api-4B8BBE?logo=pypi&style=flat)](https://pypi.org/project/geoip-py/)
+[![PyPI Package](https://img.shields.io/badge/PyPI-geoip--py-4B8BBE?logo=pypi&style=flat)](https://pypi.org/project/geoip-py/)
 [![FastAPI](https://img.shields.io/badge/FastAPI-Demo-009688?logo=fastapi&style=flat)](https://geoip-api.malith.dev/)
 [![Docker](https://img.shields.io/badge/Docker-Ready-2496ED?logo=docker&style=flat)](https://hub.docker.com/r/malithrukshan/geoip-api)
 </div>
