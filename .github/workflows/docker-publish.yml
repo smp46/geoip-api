@@ -1,57 +1,106 @@
----
-    name: Docker Build and Publish
+name: Docker Build and Publish
+
+on:
+  push:
+    branches: 
+      - main
+    paths:
+      - 'api/**'  # Only trigger when API code changes
+      - 'api/VERSION'
+      - 'Dockerfile'
+      - '.github/workflows/docker-publish.yml'
+  workflow_dispatch:  # Allows manual trigger
+
+jobs:
+  check-api-version:
+    name: Check API Version
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.get_version.outputs.version }}
+      version_changed: ${{ steps.check_version.outputs.changed }}
     
-    on:
-      release:
-        types: [created]
-      workflow_dispatch:  # Allows manual trigger
+    steps:
+      - name: Check out the repo
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0  # Fetch all history for version comparisons
+      
+      - name: Get current API version
+        id: get_version
+        run: |
+          # Check if api/VERSION exists
+          if [ ! -f "api/VERSION" ]; then
+            echo "API VERSION file doesn't exist. Creating with default version."
+            mkdir -p api
+            echo "1.0.0" > api/VERSION
+          fi
+          
+          # Get current version
+          CURRENT_VERSION=$(cat api/VERSION)
+          echo "version=$CURRENT_VERSION" >> $GITHUB_OUTPUT
+      
+      - name: Check for version changes
+        id: check_version
+        run: |
+          # Default to changed=false
+          echo "changed=false" >> $GITHUB_OUTPUT
+          
+          # For push events, check if VERSION file changed
+          if [[ "${{ github.event_name }}" == "push" ]]; then
+            # Try to get previous version from git history
+            git show HEAD~1:api/VERSION > /tmp/previous_version || echo "0.0.0" > /tmp/previous_version
+            PREVIOUS_VERSION=$(cat /tmp/previous_version)
+            CURRENT_VERSION=${{ steps.get_version.outputs.version }}
+            
+            if [ "$CURRENT_VERSION" != "$PREVIOUS_VERSION" ]; then
+              echo "API version changed from $PREVIOUS_VERSION to $CURRENT_VERSION"
+              echo "changed=true" >> $GITHUB_OUTPUT
+            else
+              echo "API version unchanged: $CURRENT_VERSION"
+            fi
+          else
+            # For manual triggers, always consider as changed
+            echo "Manual trigger detected, treating as version change"
+            echo "changed=true" >> $GITHUB_OUTPUT
+          fi
+
+  build-and-push:
+    name: Build and Push Docker image
+    needs: check-api-version
+    if: needs.check-api-version.outputs.version_changed == 'true'
+    runs-on: ubuntu-latest
     
-    jobs:
-      build-and-push:
-        name: Build and Push Docker image
-        runs-on: ubuntu-latest
-        
-        steps:
-          - name: Check out the repo
-            uses: actions/checkout@v3
-          
-          - name: Set up Docker Buildx
-            uses: docker/setup-buildx-action@v2
-          
-          - name: Log in to Docker Hub
-            uses: docker/login-action@v2
-            with:
-              username: ${{ secrets.DOCKERHUB_USERNAME }}
-              password: ${{ secrets.DOCKERHUB_TOKEN }}
-          
-          - name: Extract metadata (tags, labels) for Docker
-            id: meta
-            uses: docker/metadata-action@v4
-            with:
-              images: malithrukshan/geoip-api
-              tags: |
-                type=raw,value=latest,enable=${{ github.ref == 
-                  format('refs/heads/{0}', 'main') || startsWith(github.ref, 'refs/tags/') }}
-                type=semver,pattern={{version}},enable=${{ 
-                  startsWith(github.ref, 'refs/tags/') }}
-          
-          - name: Build and push Docker image
-            uses: docker/build-push-action@v4
-            with:
-              context: .
-              push: true
-              tags: ${{ steps.meta.outputs.tags }}
-              labels: ${{ steps.meta.outputs.labels }}
-              platforms: linux/amd64,linux/arm64
-              cache-from: type=gha
-              cache-to: type=gha,mode=max
-          
-          - name: Update Docker Hub Description
-            uses: peter-evans/dockerhub-description@v4
-            with:
-              username: ${{ secrets.DOCKERHUB_USERNAME }}
-              password: ${{ secrets.DOCKERHUB_TOKEN }}
-              repository: malithrukshan/geoip-api
-              short-description: >-
-                Self-hosted IP geolocation API that works completely offline!
-              readme-filepath: ./README.md
+    steps:
+      - name: Check out the repo
+        uses: actions/checkout@v3
+      
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+      
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v4
+        with:
+          context: .
+          push: true
+          tags: |
+            malithrukshan/geoip-api:${{ needs.check-api-version.outputs.version }}
+            malithrukshan/geoip-api:latest
+          platforms: linux/amd64,linux/arm64
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+      
+      - name: Update Docker Hub Description
+        uses: peter-evans/dockerhub-description@v4
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+          repository: malithrukshan/geoip-api
+          short-description: >-
+            Self-hosted IP geolocation API that works completely offline!
+          readme-filepath: ./README.md
