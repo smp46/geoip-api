@@ -231,6 +231,8 @@ This project uses GeoLite2 data created by MaxMind, available from [https://www.
 - Built with [FastAPI](https://fastapi.tiangolo.com/) and [Python](https://www.python.org/)
 - Powered by [geoip2](https://github.com/maxmind/GeoIP2-python) library
 
+### 🇺🇳 Flags By : [Animated Country Flags](https://github.com/Malith-Rukshan/geoip-api)
+
 ## 🤝 Contributing
 
 Contributions are welcome! Please feel free to submit a Pull Request.
