@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="/static/img/favicon.ico" type="image/x-icon">
+    <title>Self-Hosted GeoIP API | Open Source IP Geolocation Service</title>
+    <meta name="description" content="Deploy your own private GeoIP lookup service. A fast, reliable open-source IP geolocation API and Python package with Docker and cloud deployment support.">
+    <meta name="keywords" content="GeoIP, IP geolocation, self-hosted API, open source geolocation, IP lookup, MaxMind GeoLite2, Python GeoIP, Docker GeoIP, FastAPI">
+    <meta name="author" content="Malith Rukshan">
+    <link rel="stylesheet" href="/static/css/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/tgs-player.js"></script>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <nav>
+                <div class="logo">
+                    <a href="#home" class="logo-link">
+                        <img src="/static/img/logo.png" alt="GeoIP API Logo" width="50" height="50">
+                        <div class="logo-text">
+                            <span class="geo">Geo</span><span class="ip">IP</span><span class="api">API</span>
+                        </div>
+                    </a>
+                </div>
+                <div class="nav-links">
+                    <a href="#home">Home</a>
+                    <a href="#demo">Demo</a>
+                    <a href="#docs">Docs</a>
+                    <a href="#about">About</a>
+                    <a href="https://github.com/Malith-Rukshan/geoip-api" class="github-link" target="_blank">
+                        <i class="fab fa-github"></i> GitHub
+                    </a>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <section id="home" class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <h1>Self-Hosted <span class="accent">IP Geolocation</span> API</h1>
+                <p>Deploy your own private GeoIP service with complete control over your data and infrastructure</p>
+                <div class="hero-buttons">
+                    <a href="#demo" class="btn btn-primary">Try It Out</a>
+                    <a href="https://pypi.org/project/geoip-py" class="btn btn-secondary" target="_blank" style="display: flex; align-items: center; gap: 3px;">
+                        <img src="https://img.icons8.com/color/48/python.png" alt="PyPI" width="22" height="22"> PyPI Package</a>
+                </div>
+            </div>
+            <div class="hero-image">
+                <img src="/static/img/logo.png" alt="GeoIP API Logo" width="400" height="400">
+            </div>
+        </div>
+    </section>
+
+    <section id="features" class="features">
+        <div class="container">
+            <h2>Features</h2>
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-server"></i>
+                    </div>
+                    <h3>100% Self-Contained</h3>
+                    <p>No external API dependencies - everything runs on your infrastructure</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <h3>Private & Secure</h3>
+                    <p>Keep your IP lookups private with your own isolated instance</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-tachometer-alt"></i>
+                    </div>
+                    <h3>High Performance</h3>
+                    <p>Optimized for speed with local database queries and minimal overhead</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-code-branch"></i>
+                    </div>
+                    <h3>Open Source</h3>
+                    <p>Free to use, modify, and extend to meet your specific requirements</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="demo" class="demo">
+        <div class="container">
+            <h2>Try It Out</h2>
+            <div class="demo-container">
+                <div class="demo-form">
+                    <div class="input-group">
+                        <input type="text" id="ip-input" placeholder="Enter an IP address (e.g., 8.8.8.8)">
+                        <button id="lookup-btn">Lookup</button>
+                    </div>
+                </div>
+                <div class="demo-result" id="result-container">
+                    <div class="demo-result-header">
+                        <h3>Results</h3>
+                        <button id="copy-result" class="btn-icon" title="Copy to clipboard">
+                            <i class="far fa-copy"></i>
+                        </button>
+                    </div>
+                    <div class="result-flag-container" id="result-flag-container">
+                        <!-- Flag will be dynamically inserted here -->
+                    </div>
+                    <div class="result-content">
+                        <pre id="result"></pre>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="docs" class="docs">
+        <div class="container">
+            <h2>API Documentation</h2>
+            <div class="docs-container">
+                <div class="endpoint-cards">
+                    <div class="endpoint-card">
+                        <div class="endpoint-method">GET</div>
+                        <div class="endpoint-path">/{ip_address}</div>
+                        <p>Direct IP lookup via URL path</p>
+                        <div class="endpoint-example">
+                            <code>https://geoip-api.malith.dev/8.8.8.8</code>
+                            <button class="copy-btn" data-text="https://geoip-api.malith.dev/8.8.8.8">
+                                <i class="far fa-copy"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="endpoint-card">
+                        <div class="endpoint-method">GET</div>
+                        <div class="endpoint-path">/?ip={ip_address}</div>
+                        <p>IP lookup via query parameter</p>
+                        <div class="endpoint-example">
+                            <code>https://geoip-api.malith.dev/?ip=8.8.8.8</code>
+                            <button class="copy-btn" data-text="https://geoip-api.malith.dev/?ip=8.8.8.8">
+                                <i class="far fa-copy"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="endpoint-card">
+                        <div class="endpoint-method">GET</div>
+                        <div class="endpoint-path">/api/v1/geoip/lookup/{ip}</div>
+                        <p>Standard API endpoint</p>
+                        <div class="endpoint-example">
+                            <code>https://geoip-api.malith.dev/api/v1/geoip/lookup/8.8.8.8</code>
+                            <button class="copy-btn" data-text="https://geoip-api.malith.dev/api/v1/geoip/lookup/8.8.8.8">
+                                <i class="far fa-copy"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="response-example">
+                    <h3>Response Format</h3>
+                    <pre class="response-json">{
+  "ip": "8.8.8.8",
+  "code": "US",
+  "country": "United States",
+  "city": "Mountain View",
+  "lat": 37.4056,
+  "lon": -122.0775,
+  "tz": "America/Los_Angeles",
+  "isp": "Google LLC",
+  "asn": 15169
+}</pre>
+                </div>
+                
+                <div class="docs-links">
+                    <a href="/docs" class="btn btn-secondary">Interactive API Docs</a>
+                    <a href="/redoc" class="btn btn-secondary">ReDoc</a>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <section id="python" class="python-usage">
+        <div class="container">
+            <h2>Python Package Usage</h2>
+            <div class="code-container">
+                <div class="code-header">
+                    <span>Install Package</span>
+                    <button class="copy-btn" data-text="pip install geoip-py">
+                        <i class="far fa-copy"></i>
+                    </button>
+                </div>
+                <pre class="code-block"><code>pip install geoip-py</code></pre>
+                
+                <div class="code-header">
+                    <span>Python Example</span>
+                    <button class="copy-btn" data-text="from geoip_api import GeoIPLookup
+
+# Initialize the lookup service (downloads DB files if needed)
+lookup = GeoIPLookup(download_if_missing=True)
+
+# Look up an IP address
+result = lookup.lookup('8.8.8.8')
+print(result)">
+                        <i class="far fa-copy"></i>
+                    </button>
+                </div>
+                <pre class="code-block"><code>from geoip_api import GeoIPLookup
+
+# Initialize the lookup service (downloads DB files if needed)
+lookup = GeoIPLookup(download_if_missing=True)
+
+# Look up an IP address
+result = lookup.lookup('8.8.8.8')
+print(result)</code></pre>
+            </div>
+        </div>
+    </section>
+
+    <section id="why-self-host" class="why-self-host">
+        <div class="container">
+            <h2>Why Self-Host Your GeoIP Service?</h2>
+            <div class="reasons-grid">
+                <div class="reason-card">
+                    <div class="reason-icon">
+                        <i class="fas fa-lock"></i>
+                    </div>
+                    <h3>Data Privacy</h3>
+                    <p>Keep sensitive IP lookup data within your network perimeter. No data sharing with third-party API providers.</p>
+                </div>
+                <div class="reason-card">
+                    <div class="reason-icon">
+                        <i class="fas fa-money-bill-wave"></i>
+                    </div>
+                    <h3>Cost Effective</h3>
+                    <p>Eliminate subscription fees and per-query costs associated with commercial GeoIP APIs.</p>
+                </div>
+                <div class="reason-card">
+                    <div class="reason-icon">
+                        <i class="fas fa-network-wired"></i>
+                    </div>
+                    <h3>Network Reliability</h3>
+                    <p>Remove external API dependencies and potential points of failure from your infrastructure.</p>
+                </div>
+                <div class="reason-card">
+                    <div class="reason-icon">
+                        <i class="fas fa-cogs"></i>
+                    </div>
+                    <h3>Full Control</h3>
+                    <p>Customize and extend functionality to meet your specific business requirements.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="deployment" class="deployment">
+        <div class="container">
+            <h2>Deployment Options</h2>
+            <div class="deployment-cards">
+                <div class="deployment-card">
+                    <img src="https://img.icons8.com/color/100/docker.png" alt="Docker" class="deployment-logo">
+                    <h3>Docker</h3>
+                    <pre class="code-block"><code>docker pull malithrukshan/geoip-api
+docker run -p 8000:8000 malithrukshan/geoip-api</code></pre>
+                    <a href="https://hub.docker.com/r/malithrukshan/geoip-api" class="btn btn-sm" target="_blank">Docker Hub</a>
+                </div>
+                <div class="deployment-card">
+                    <img src="https://img.icons8.com/color/100/heroku.png" alt="Railway" class="deployment-logo">
+                    <h3>Heroku</h3>
+                    <p>One-click deployment to Heroku</p>
+                    <a href="https://heroku.com/deploy?template=" class="btn btn-sm" target="_blank">Deploy on Heroku</a>
+                </div>
+                <div class="deployment-card">
+                    <img src="https://img.icons8.com/fluency/100/ftp-server.png" alt="Self-hosted" class="deployment-logo">
+                    <h3>Self-Hosted</h3>
+                    <p>Clone, customize, and deploy anywhere</p>
+                    <a href="https://github.com/Malith-Rukshan/geoip-api" class="btn btn-sm" target="_blank">View Source</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="about" class="about">
+        <div class="container">
+            <h2>About the Project</h2>
+            <div class="about-content">
+                <div class="about-text">
+                    <p>GeoIP API is an open-source project designed for self-hosting your own IP geolocation service. Unlike commercial GeoIP APIs that require external calls and subscriptions, our solution gives you complete control over your infrastructure and data.</p>
+                    <p>Built with FastAPI and utilizing MaxMind's GeoLite2 databases, this service operates completely locally on your infrastructure, with no external API dependencies. All IP lookups are performed against databases stored on your own servers, ensuring privacy, reliability, and elimination of per-query costs.</p>
+                    <p>The project is available both as a Python package (for integration into your applications) and as a deployable API service with Docker support for easy self-hosting.</p>
+                    <div class="about-links">
+                        <a href="https://github.com/Malith-Rukshan/geoip-api" target="_blank" class="social-link">
+                            <i class="fab fa-github"></i> GitHub
+                        </a>
+                        <a href="https://pypi.org/project/geoip-py" target="_blank" class="social-link">
+                            <i class="fab fa-python"></i> PyPI
+                        </a>
+                        <a href="https://hub.docker.com/r/malithrukshan/geoip-api" target="_blank" class="social-link">
+                            <i class="fab fa-docker"></i> Docker Hub
+                        </a>
+                        <a href="mailto:hello@malith.dev" class="social-link">
+                            <i class="far fa-envelope"></i> Contact
+                        </a>
+                    </div>
+                </div>
+                <div class="about-image">
+                    <img src="/static/img/logo.png" alt="GeoIP API Logo">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-logo">
+                    <a href="#home" class="logo-link">
+                        <img src="/static/img/logo.png" alt="GeoIP API Logo" width="50" height="50">
+                        <div class="logo-text">
+                            <span class="geo">Geo</span><span class="ip">IP</span><span class="api">API</span>
+                        </div>
+                    </a>
+                </div>
+                <div class="footer-links">
+                    <a href="#home">Home</a>
+                    <a href="#demo">Demo</a>
+                    <a href="#docs">Docs</a>
+                    <a href="#about">About</a>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 GeoIP API by <a href="https://github.com/Malith-Rukshan" target="_blank">Malith Rukshan</a>. Released under MIT License.</p>
+                <p>Powered by <a href="https://github.com/P3TERX/GeoLite.mmdb" target="_blank">MaxMind's GeoLite2</a>.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="/static/js/demo.js"></script>
+</body>
+</html>

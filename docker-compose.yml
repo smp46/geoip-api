@@ -1,0 +1,21 @@
+version: '3.8'
+
+services:
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./api/db:/app/api/db
+    environment:
+      - ENVIRONMENT=production
+      - GEOIP_CITY_DB_PATH=/app/api/db/GeoLite2-City.mmdb
+      - GEOIP_ASN_DB_PATH=/app/api/db/GeoLite2-ASN.mmdb
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/api/v1/geoip/lookup/8.8.8.8"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s

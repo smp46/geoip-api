@@ -1,0 +1,78 @@
+---
+    name: Python Tests
+    
+    on:
+      push:
+        branches: [main]
+        paths:
+          - '**.py'
+          - 'requirements/**'
+          - 'setup.py'
+          - 'setup.cfg'
+          - 'pyproject.toml'
+          - '.github/workflows/test.yml'
+      pull_request:
+        branches: [main]
+        paths:
+          - '**.py'
+          - 'requirements/**'
+          - 'setup.py'
+          - 'setup.cfg'
+          - 'pyproject.toml'
+          - '.github/workflows/test.yml'
+    
+    jobs:
+      test:
+        runs-on: ubuntu-latest
+        strategy:
+          matrix:
+            python-version: [3.9, '3.10', 3.11, 3.12]
+    
+        steps:
+          - uses: actions/checkout@v3
+          
+          - name: Set up Python ${{ matrix.python-version }}
+            uses: actions/setup-python@v4
+            with:
+              python-version: ${{ matrix.python-version }}
+          
+          - name: Install dependencies
+            run: |
+              python -m pip install --upgrade pip
+              pip install pytest pytest-cov flake8 black isort mypy
+              pip install -r requirements/dev.txt
+              pip install -e .
+          
+          - name: Check formatting
+            run: |
+              black --check src tests api
+              isort --check src tests api
+          
+          - name: Lint with flake8 (warnings only)
+            run: |
+              flake8 src tests api --count --select=E9,F63,F7,F82 --show-source --statistics
+              flake8 src tests api --count --exit-zero --max-complexity=10 \
+                --max-line-length=100 --statistics
+          
+          - name: Type check with mypy
+            run: |
+              mypy src tests api
+          
+          - name: Download GeoIP databases for testing
+            run: |
+              mkdir -p ~/.geoip_api
+              curl -L -o ~/.geoip_api/GeoLite2-City.mmdb \
+                https://github.com/P3TERX/GeoLite.mmdb/raw/download/GeoLite2-City.mmdb
+              curl -L -o ~/.geoip_api/GeoLite2-ASN.mmdb \
+                https://github.com/P3TERX/GeoLite.mmdb/raw/download/GeoLite2-ASN.mmdb
+          
+          - name: Test with pytest
+            run: |
+              PYTHONPATH=$PYTHONPATH:$(pwd) pytest --cov=src --cov=api --cov-report=xml
+    
+          - name: Upload coverage to Codecov
+            uses: codecov/codecov-action@v3
+            with:
+              token: ${{ secrets.CODECOV_TOKEN }}
+              file: ./coverage.xml
+              fail_ci_if_error: false
