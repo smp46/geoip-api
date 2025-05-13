@@ -5,7 +5,7 @@
 <div align='center'>
 
 [![PyPI Package](https://img.shields.io/badge/PyPI-geoip--api-4B8BBE?logo=pypi&style=flat)](https://pypi.org/project/geoip-py/)
-[![FastAPI](https://img.shields.io/badge/FastAPI-Demo-009688?logo=fastapi&style=flat)](https://fastapi.tiangolo.com/)
+[![FastAPI](https://img.shields.io/badge/FastAPI-Demo-009688?logo=fastapi&style=flat)](https://geoip-api.malith.dev/)
 [![Docker](https://img.shields.io/badge/Docker-Ready-2496ED?logo=docker&style=flat)](https://hub.docker.com/r/malithrukshan/geoip-api)
 </div>
 
@@ -65,6 +65,8 @@ print(result)
 
 ### REST API
 
+✅ Demo : https://geoip-api.malith.dev/
+
 #### Simple Endpoints
 
 ```
@@ -106,7 +108,7 @@ One-click deployment to popular platforms:
 [![Deploy with heroku](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy)
 [![Deploy to Netlify](https://www.netlify.com/img/deploy/button.svg)](https://app.netlify.com/start/deploy?repository=https://github.com/Malith-Rukshan/geoip-api)
 
-[![Deploy to Railway](https://railway.app/button.svg)](https://railway.app/template/geoip-api)
+[![Deploy to Railway](https://railway.app/button.svg)](https://railway.app/template/6zn6HZ)
 [![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy?repo=https://github.com/Malith-Rukshan/geoip-api)
 
 ### 🐳 Docker
@@ -132,8 +134,8 @@ services:
     image: malithrukshan/geoip-api
     ports:
       - "8000:8000"
-    volumes:
-      - ./data:/app/api/db
+    # volumes:
+    #   - ./data:/app/api/db
     environment:
       - ENVIRONMENT=production
 ```
