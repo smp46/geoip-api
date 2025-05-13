@@ -1,0 +1,28 @@
+{
+    "name": "GeoIP API",
+    "description": "Self-hosted IP geolocation API that works completely offline",
+    "keywords": [
+        "geoip",
+        "geolocation",
+        "fastapi",
+        "ip-lookup",
+        "self-hosted",
+        "python"
+    ],
+    "website": "https://geoip-api.malith.dev",
+    "repository": "https://github.com/Malith-Rukshan/geoip-api",
+    "logo": "https://raw.githubusercontent.com/Malith-Rukshan/geoip-api/main/api/static/img/logo.png",
+    "success_url": "/",
+    "env": {
+      "ENVIRONMENT": {
+        "description": "Application environment",
+        "value": "production"
+      }
+    },
+    "buildpacks": [
+      {
+        "url": "heroku/python"
+      }
+    ],
+    "stack": "heroku-22"
+  }
