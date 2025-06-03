@@ -11,7 +11,7 @@ API_DESCRIPTION = """
 A REST API for GeoIP lookups. This API allows you to lookup geographic 
 and network information for IP addresses using the MaxMind GeoLite2 databases.
 """
-API_VERSION = "1.0.2"
+API_VERSION = "1.1.0"
 API_PREFIX = "/api/v1"
 
 # Database settings
