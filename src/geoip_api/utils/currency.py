@@ -3,14 +3,14 @@ Currency mapping utilities for GeoIP API using pycountry.
 """
 
 import logging
-from typing import Optional
+from typing import Any, Optional
 
 try:
     import pycountry
-
+    _pycountry: Optional[Any] = pycountry
     PYCOUNTRY_AVAILABLE = True
 except ImportError:
-    pycountry = None
+    _pycountry = None
     PYCOUNTRY_AVAILABLE = False
     logging.warning("pycountry not installed. Currency lookups will be limited.")
 
