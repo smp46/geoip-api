@@ -7,6 +7,7 @@ from typing import Any, Optional
 
 try:
     import pycountry
+
     _pycountry: Optional[Any] = pycountry
     PYCOUNTRY_AVAILABLE = True
 except ImportError:
