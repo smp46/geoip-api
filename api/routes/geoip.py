@@ -31,6 +31,7 @@ class GeoIPResponse(BaseModel):
     lat: Optional[float] = None
     lon: Optional[float] = None
     tz: Optional[str] = None
+    currency: Optional[str] = None
     isp: Optional[str] = None
     asn: Optional[int] = None
 
