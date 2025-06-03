@@ -7,6 +7,7 @@ from typing import Optional
 
 try:
     import pycountry
+
     PYCOUNTRY_AVAILABLE = True
 except ImportError:
     pycountry = None
@@ -84,66 +85,72 @@ COMMON_COUNTRY_CURRENCY_MAP = {
 def get_currency_for_country(country_code: Optional[str]) -> Optional[str]:
     """
     Get the primary currency for a given country code.
-    
+
     Args:
         country_code: ISO 3166-1 alpha-2 country code
-        
+
     Returns:
         ISO 4217 currency code or None if not found
     """
     if not country_code:
         return None
-        
+
     # Convert to uppercase for consistency
     country_code = country_code.upper()
-    
+
     # Validate country code exists using pycountry if available
     if PYCOUNTRY_AVAILABLE:
         try:
             country = pycountry.countries.get(alpha_2=country_code)
             if not country:
-                logger.debug(f"Country code {country_code} not found in pycountry database")
+                logger.debug(
+                    f"Country code {country_code} not found in pycountry database"
+                )
                 return None
         except Exception as e:
             logger.warning(f"Error validating country code with pycountry: {e}")
-    
+
     # Get currency from our common mapping
     currency_code = COMMON_COUNTRY_CURRENCY_MAP.get(country_code)
-    
+
     if currency_code and PYCOUNTRY_AVAILABLE:
         # Validate that the currency exists in pycountry
         try:
             currency = pycountry.currencies.get(alpha_3=currency_code)
             if currency:
-                logger.debug(f"Found currency {currency_code} for country {country_code}")
+                logger.debug(
+                    f"Found currency {currency_code} for country {country_code}"
+                )
                 return currency_code
             else:
-                logger.warning(f"Currency {currency_code} not found in pycountry database")
+                logger.warning(
+                    f"Currency {currency_code} not found in pycountry database"
+                )
                 return None
         except Exception as e:
             logger.warning(f"Error validating currency with pycountry: {e}")
-    
+
     if currency_code:
         logger.debug(f"Found currency {currency_code} for country {country_code}")
     else:
         logger.debug(f"No currency mapping found for country code: {country_code}")
-    
+
     return currency_code
 
 
 def get_currency_info(currency_code: Optional[str]) -> Optional[dict]:
     """
     Get detailed currency information using pycountry.
-    
+
     Args:
         currency_code: ISO 4217 currency code
-        
+
     Returns:
         Dictionary with currency information or None if not found
     """
     if not currency_code or not PYCOUNTRY_AVAILABLE:
         return None
-        
+
     try:
         currency = pycountry.currencies.get(alpha_3=currency_code.upper())
         if currency:
@@ -154,5 +161,5 @@ def get_currency_info(currency_code: Optional[str]) -> Optional[dict]:
             }
     except Exception as e:
         logger.warning(f"Error getting currency info for {currency_code}: {e}")
-    
+
     return None

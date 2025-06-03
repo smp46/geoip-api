@@ -101,11 +101,11 @@ class GeoIPLookup:
                             "tz": city_response.location.time_zone,
                         }
                     )
-                    
+
                     # Add currency information
                     currency_code = get_currency_for_country(country_code)
                     geo_details["currency"] = currency_code
-                    
+
                 except AddressNotFoundError:
                     logger.warning(f"City information not found for IP: {ip_address}")
                     geo_details.update(
