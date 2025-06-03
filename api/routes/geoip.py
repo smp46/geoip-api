@@ -27,10 +27,13 @@ class GeoIPResponse(BaseModel):
     ip: str
     code: Optional[str] = None
     country: Optional[str] = None
+    continent: Optional[str] = None
+    continent_code: Optional[str] = None
     city: Optional[str] = None
     lat: Optional[float] = None
     lon: Optional[float] = None
     tz: Optional[str] = None
+    currency: Optional[str] = None
     isp: Optional[str] = None
     asn: Optional[int] = None
 

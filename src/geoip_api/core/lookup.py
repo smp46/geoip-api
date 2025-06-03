@@ -1,5 +1,5 @@
 """
-GeoIP lookup functionality.
+GeoIP lookup functionality with continent support.
 """
 
 import ipaddress
@@ -11,6 +11,7 @@ from geoip2.errors import AddressNotFoundError
 
 from geoip_api.core.database import get_database_path
 from geoip_api.exceptions import InvalidIPError, LookupError
+from geoip_api.utils.currency import get_currency_for_country
 
 logger = logging.getLogger(__name__)
 
@@ -87,26 +88,37 @@ class GeoIPLookup:
             with geoip2.database.Reader(self.city_db_path) as city_reader:
                 try:
                     city_response = city_reader.city(ip_address)
+                    country_code = city_response.country.iso_code
                     geo_details.update(
                         {
-                            "code": city_response.country.iso_code,
+                            "code": country_code,
                             "country": city_response.country.name,
+                            "continent": city_response.continent.name,
+                            "continent_code": city_response.continent.code,
                             "city": city_response.city.name,
                             "lat": city_response.location.latitude,
                             "lon": city_response.location.longitude,
                             "tz": city_response.location.time_zone,
                         }
                     )
+                    
+                    # Add currency information
+                    currency_code = get_currency_for_country(country_code)
+                    geo_details["currency"] = currency_code
+                    
                 except AddressNotFoundError:
                     logger.warning(f"City information not found for IP: {ip_address}")
                     geo_details.update(
                         {
                             "code": None,
                             "country": None,
+                            "continent": None,
+                            "continent_code": None,
                             "city": None,
                             "lat": None,
                             "lon": None,
                             "tz": None,
+                            "currency": None,
                         }
                     )
 

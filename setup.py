@@ -5,10 +5,10 @@ with open("README.md", "r", encoding="utf-8") as fh:
 
 setup(
     name="geoip-py",
-    version="1.0.0",
+    version="1.1.0",  # ← AGGIORNATA
     author="Malith Rukshan",
     author_email="hello@malith.dev",
-    description="Self-hosted IP geolocation library and API with that works completely offline!",
+    description="Self-hosted IP geolocation library and API with currency support that works completely offline!",  # ← AGGIORNATA
     long_description=long_description,
     long_description_content_type="text/markdown",
     url="https://github.com/Malith-Rukshan/geoip-api",
@@ -23,6 +23,7 @@ setup(
     install_requires=[
         "geoip2==5.1.0",
         "requests>=2.32.3",
+        "pycountry>=24.6.1",
     ],
     extras_require={
         "dev": ["pytest>=6.0", "black", "isort", "mypy", "flake8"],
