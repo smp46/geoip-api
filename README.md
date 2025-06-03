@@ -90,10 +90,13 @@ https://your-domain.com/api/v1/geoip/lookup/8.8.8.8
   "ip": "8.8.8.8",
   "code": "US",
   "country": "United States",
+  "continent": "North America",
+  "continent_code": "NA",
   "city": "Mountain View",
   "lat": 37.4056,
   "lon": -122.0775,
   "tz": "America/Los_Angeles",
+  "currency": "USD",
   "isp": "Google LLC",
   "asn": 15169
 }
