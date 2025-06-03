@@ -1,5 +1,5 @@
 """
-GeoIP lookup functionality.
+GeoIP lookup functionality with continent support.
 """
 
 import ipaddress
@@ -93,6 +93,8 @@ class GeoIPLookup:
                         {
                             "code": country_code,
                             "country": city_response.country.name,
+                            "continent": city_response.continent.name,
+                            "continent_code": city_response.continent.code,
                             "city": city_response.city.name,
                             "lat": city_response.location.latitude,
                             "lon": city_response.location.longitude,
@@ -110,6 +112,8 @@ class GeoIPLookup:
                         {
                             "code": None,
                             "country": None,
+                            "continent": None,
+                            "continent_code": None,
                             "city": None,
                             "lat": None,
                             "lon": None,
