@@ -7,6 +7,7 @@ import logging.config
 from contextlib import asynccontextmanager
 from ipaddress import ip_address as IPvAnyAddress
 from typing import Optional
+import re
 
 from fastapi import Depends, FastAPI, HTTPException, Query, Request, status
 from fastapi.middleware.cors import CORSMiddleware
@@ -59,6 +60,7 @@ app = FastAPI(
     title=API_TITLE,
     description=API_DESCRIPTION,
     version=API_VERSION,
+    proxy_headers=True,
     docs_url="/docs",
     redoc_url="/redoc",
     lifespan=lifespan,
@@ -125,12 +127,27 @@ async def lookup_ip_query(
 ):
     """
     Look up geolocation information using a query parameter.
+    Or the requesters IP address, if not otherwise provided.
     """
-    if ip is None:
-        # If no IP is provided, show the homepage
-        return templates.TemplateResponse(request, "index.html")
-
     try:
+        if ip is None:
+            # Use requester's IP, if IP not provided
+            client = request.client
+            if client is not None:
+                ip = client.host
+            else:
+                # Handle the case where client is None
+                raise HTTPException(status_code=400, detail="Client IP not available")
+            # If IP is a Docker container IP, use X-Forwarded-For header
+            if re.match(
+                r"\b172\.(1[6-9]|[2-9]\d|1\d{2}|2[0-4]\d|25[0-5])\.\d{1,3}\.\d{1,3}\b",
+                ip,
+            ):
+                ip = request.headers.get("X-Forwarded-For")
+                # If IP is still None, return index page
+                if ip is None:
+                    return templates.TemplateResponse(request, "index.html")
+
         # Validate IP address format
         IPvAnyAddress(ip)
 
