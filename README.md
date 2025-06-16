@@ -79,6 +79,9 @@ https://your-domain.com/8.8.8.8
 
 # Query parameter
 https://your-domain.com/?ip=8.8.8.8
+
+# No parameter (uses the client's IP address) 
+https://your-domain.com/
 ```
 
 #### Standard API Endpoint
