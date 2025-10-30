@@ -1,3 +1,6 @@
+> [!IMPORTANT]
+> This is a fork of Malith-Rukshan/geoip-api. I added the ability to do self-lookups, that is look up the geolocation of the sender's IP. This was used for geolocating the closest STUN servers for my other project: [FileFerry](https://github.com/smp46/FileFerry).
+
 <p style="text-align:center;" align="center">
   <img align="center" src="https://raw.githubusercontent.com/Malith-Rukshan/geoip-api/refs/heads/main/api/static/img/logo.png" alt="GeoIP API" width="300px" height="300px"/>
 </p>
